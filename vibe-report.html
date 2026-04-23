@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Audit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #1a1a1a; padding: 2rem; }
+  .container { max-width: 800px; margin: 0 auto; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  .header h1 { font-size: 22px; font-weight: 500; }
+  .meta { font-size: 12px; color: #888; margin-top: 4px; }
+  .badge { background: #1D9E75; color: white; font-size: 13px; padding: 6px 14px; border-radius: 8px; font-weight: 500; }
+  .card { background: white; border: 0.5px solid #e0e0dc; border-radius: 12px; padding: 1.5rem; margin-bottom: 12px; }
+  .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #aaa; margin-bottom: 12px; }
+  .content h3 { font-size: 15px; font-weight: 500; margin: 1.4rem 0 0.6rem; color: #1a1a1a; }
+  .content h3:first-child { margin-top: 0; }
+  .content p { font-size: 14px; line-height: 1.8; color: #444; margin-bottom: 0.6rem; }
+  .content ul { padding-left: 1.2rem; margin-bottom: 0.6rem; }
+  .content li { font-size: 14px; line-height: 1.8; color: #444; margin-bottom: 4px; }
+  .content strong { font-weight: 500; color: #1a1a1a; }
+  .footer { text-align: center; font-size: 11px; color: #bbb; margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>Vibe Audit</h1>
+      <div class="meta">Generated 4/23/2026, 2:07:40 PM</div>
+    </div>
+    <div class="badge">vibe-cli</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Full analysis</div>
+    <div class="content"><h3>1. System Overview</h3>
+<p>The codebase is a command-line interface (CLI) tool named &quot;vibe,&quot; designed to analyze and audit codebases by traversing directory structures, collecting files, and generating HTML reports from markdown output. It integrates with OpenAI&#39;s API to leverage AI capabilities, potentially for understanding or summarizing code. The application utilizes Node.js along with various libraries (<code>commander</code>, <code>fs</code>, <code>path</code>, <code>marked</code>) to provide functionality.</p>
+<h3>2. Core Flows</h3>
+<ul>
+<li><strong>Directory Traversal</strong>: The <code>getFiles</code> function traverses a specified directory, excluding certain directories (like <code>node_modules</code> and <code>.git</code>), and collects paths of the files into a list. This is the primary data gathering flow.</li>
+<li><strong>Markdown to HTML Conversion</strong>: The <code>generateHTML</code> function takes markdown input (though not fully provided in the snippet) and converts it into an HTML format, which is designed for visualization or reporting purposes.</li>
+<li><strong>CLI Operation</strong>: The <code>commander</code> library is used to define the command-line structure, allowing users to invoke functionalities with specified commands and arguments.</li>
+</ul>
+<h3>3. Risks</h3>
+<ul>
+<li><strong>Error Handling</strong>: The code lacks error handling for file system operations (e.g., reading files, directory permissions issues). This could lead to crashes if unexpected conditions arise.</li>
+<li><strong>Environment Configuration</strong>: The reliance on environment variables (like <code>OPENAI_API_KEY</code>) could introduce deployment challenges if not properly managed, leading to a risk of failure at runtime.</li>
+<li><strong>Security</strong>: If the CLI accepts user input without sanitization, it may be vulnerable to directory traversal or command injection attacks.</li>
+<li><strong>Scalability</strong>: The synchronous nature of <code>fs</code> operations (especially for large directories) can block the event loop, resulting in performance degradation.</li>
+</ul>
+<h3>4. Structure Scores (out of 10)</h3>
+<ul>
+<li><strong>Code Structure</strong>: 6/10<br>Reason: The code is modular enough with well-defined functions but lacks comprehensive error handling and some comments/documentation for clarity.</li>
+<li><strong>Readability</strong>: 7/10<br>Reason: The naming conventions are clear, but the partial code snippet limits full context understanding.</li>
+<li><strong>Maintainability</strong>: 5/10<br>Reason: Absence of automated tests or a clear project structure (e.g., lack of ./src, ./lib) affects maintainability.</li>
+</ul>
+<h3>5. Moat vs Commodity</h3>
+<ul>
+<li><strong>Moat</strong>: The integration with OpenAI may provide a proprietary edge if well-executed with unique functionalities leveraging AI insights.</li>
+<li><strong>Commodity</strong>: The basic CLI structure and file analysis features are relatively common in developer tools, thus positioning this product potentially closer to the commodity side unless it introduces unique features or depth.</li>
+</ul>
+<h3>6. What to Fix Next</h3>
+<ol>
+<li><strong>Implement Error Handling</strong>: Add try-catch blocks around I/O operations and provide user feedback if an error occurs during execution.</li>
+<li><strong>Refactor for Async Operations</strong>: Switch to asynchronous methods for file operations with <code>fs.promises</code> to improve performance and responsiveness.</li>
+<li><strong>Enhance Documentation</strong>: Expand the code comments and add a README.md to provide context, installation instructions, and usage examples.</li>
+<li><strong>Introduce Tests</strong>: Start writing unit tests, particularly around core functionalities like file collection and markdown conversion, to ensure reliability during future code changes.</li>
+<li><strong>Security Review</strong>: Conduct a security review, especially around user input handling, to prevent vulnerable patterns.</li>
+</ol>
+</div>
+  </div>
+  <div class="footer">generated by vibe-cli</div>
+</div>
+</body>
+</html>
