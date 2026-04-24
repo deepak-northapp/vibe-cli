@@ -48,7 +48,7 @@ A lot can be improved. If you want to contribute, here's what's missing:
 
 **Easy wins**
 - Add support for Python, Go, Rust files
-- Add a `.vibeconfig` file so you don't need to export the API key every time
+- Add a `.codebriefconfig` file so you don't need to export the API key every time
 - Export report as PDF or JSON
 
 **Medium effort**
@@ -71,6 +71,4 @@ No gatekeeping. If it makes codebrief more useful, it's welcome.
 ## License
 MIT
 
-## License
 
-MIT
