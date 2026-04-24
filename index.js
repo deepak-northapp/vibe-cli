@@ -9,7 +9,7 @@ const OpenAI = require("openai");
 const program = new Command();
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-program.name("vibe").description("Codebase thinking CLI").version("0.1.0");
+program.name("codebrief").description("Codebase thinking CLI").version("0.1.0");
 
 function getFiles(dir, fileList = []) {
     const files = fs.readdirSync(dir);
@@ -24,6 +24,14 @@ function getFiles(dir, fileList = []) {
         }
     });
     return fileList;
+}
+
+function loadSkills() {
+    const skillsPath = path.join(process.cwd(), "skills.md");
+    if (fs.existsSync(skillsPath)) {
+        return fs.readFileSync(skillsPath, "utf-8");
+    }
+    return null;
 }
 
 function generateHTML(markdownOutput) {
@@ -42,6 +50,7 @@ function generateHTML(markdownOutput) {
   .header h1 { font-size: 22px; font-weight: 500; }
   .meta { font-size: 12px; color: #888; margin-top: 4px; }
   .badge { background: #1D9E75; color: white; font-size: 13px; padding: 6px 14px; border-radius: 8px; font-weight: 500; }
+  .skills-badge { background: #378ADD; color: white; font-size: 11px; padding: 4px 10px; border-radius: 6px; margin-left: 8px; }
   .card { background: white; border: 0.5px solid #e0e0dc; border-radius: 12px; padding: 1.5rem; margin-bottom: 12px; }
   .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #aaa; margin-bottom: 12px; }
   .content h3 { font-size: 15px; font-weight: 500; margin: 1.4rem 0 0.6rem; color: #1a1a1a; }
@@ -60,7 +69,10 @@ function generateHTML(markdownOutput) {
       <h1>Vibe Audit</h1>
       <div class="meta">Generated ${new Date().toLocaleString()}</div>
     </div>
-    <div class="badge">vibe-cli</div>
+    <div>
+      <span class="badge">vibe-cli</span>
+      ${fs.existsSync(path.join(process.cwd(), "skills.md")) ? '<span class="skills-badge">skills loaded</span>' : ''}
+    </div>
   </div>
   <div class="card">
     <div class="card-label">Full analysis</div>
@@ -78,6 +90,11 @@ program
     .action(async () => {
         console.log("\nScanning project...\n");
 
+        const skills = loadSkills();
+        if (skills) {
+            console.log("Skills loaded from skills.md\n");
+        }
+
         const files = getFiles(process.cwd());
         const importantFiles = files
             .filter((f) => f.endsWith(".js") || f.endsWith(".ts") || f.includes("api") || f.includes("service"))
@@ -88,6 +105,10 @@ program
             code: fs.readFileSync(file, "utf-8").slice(0, 1500),
         }));
 
+        const skillsSection = skills
+            ? `\n\nFollow these analysis guidelines:\n${skills}`
+            : "";
+
         const prompt = `You are a senior software architect analyzing a founder's codebase.
 Analyze this codebase and provide:
 1. System overview
@@ -97,7 +118,7 @@ Analyze this codebase and provide:
 5. Moat vs commodity
 6. What to fix next
 
-Be concise, specific, and opinionated. Do not give generic advice.
+Be concise, specific, and opinionated. Do not give generic advice.${skillsSection}
 
 Files:
 ${JSON.stringify(content, null, 2)}`;
